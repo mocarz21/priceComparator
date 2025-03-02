@@ -1,0 +1,26 @@
+
+.advertisement-box {
+  align-items: center;
+  background: #008000;
+  color: #fff;
+  padding: 1px;
+  border-radius: 5px;
+  margin: 0 0 40px 2px;
+  overflow: hidden;
+  height: 310px;
+
+
+  -webkit-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  -moz-box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+  box-shadow: 8px 8px 24px 0px rgba(66, 68, 90, 1);
+}
+.img-box{
+  height: 85%;
+  width: auto;
+  overflow: hidden;
+  img{
+    // object-fit: cover;
+    height:100%;
+    width:100%;
+  }
+}
