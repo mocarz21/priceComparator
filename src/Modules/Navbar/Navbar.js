@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import "./Navbar.scss";
+import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import { Container, Row, Col, Nav } from "react-bootstrap";
-import { FaTv, FaCouch, FaMobileAlt, FaCamera, FaGamepad, FaBicycle, FaDumbbell, FaHome, FaTools, FaPaw, FaPuzzlePiece, FaBlender } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import "./Navbar.scss";
+import { FaTv, FaBlender, FaMobileAlt, FaCamera, FaGamepad, FaBicycle, FaDumbbell, FaHome, FaTools, FaPaw, FaPuzzlePiece } from "react-icons/fa";
 
 const menuItems = [
   { id: "tv", label: "TV, Audio i RTV", icon: <FaTv />, subcategories: ["Telewizory", "Głośniki", "Soundbary", "Odtwarzacze Blu-ray"] },
@@ -20,36 +20,59 @@ const menuItems = [
 ];
 
 export const Navbar = () => {
+  const { categoryId } = useParams();
   const [openMenu, setOpenMenu] = useState(null);
+  const [subcategories, setSubcategories] = useState([]);
+
+  useEffect(() => {
+    const selectedCategory = menuItems.find(item => item.id === categoryId);
+    setSubcategories(selectedCategory ? selectedCategory.subcategories : []);
+  }, [categoryId]);
 
   const toggleMenu = (id) => {
-      setOpenMenu(prev => prev === id ? null : id);
+    setOpenMenu(prev => (prev === id ? null : id));
   };
 
   return (
-      <Container className="container navbar-module">
-          <Row>
-              <Col className="col-12">
-                  <Nav className="flex-column">
-                      {menuItems.map((item) => (
-                          <div key={item.id} className="row menu-wrapper">
-                              <div className="col menu-item" onClick={() => toggleMenu(item.id)}>
-                                  <span className="menu-icon">{item.icon}</span>
-                                  <span className="menu-label">{item.label}</span>
-                                  <span className="menu-arrow">{openMenu === item.id ? "▲" : "▶"}</span>
-                              </div>
-                              <div className={`submenu ${openMenu === item.id ? "show" : ""}`}>
-                                  {item.subcategories.map((sub, index) => (
-                                    <Link key={index} to={`/category/${item.id}/${sub.toLowerCase().replace(/\s+/g, '-')}`} className="row col submenu-item">
-                                      {sub}
-                                    </Link>
-                                  ))}
-                              </div>
-                          </div>
-                      ))}
-                  </Nav>
-              </Col>
-          </Row>
-      </Container>
+    <Container className={`navbar-module ${categoryId ? "category-view" : ""}`}>
+      {!categoryId && (
+        <Row>
+          <Col className="col-12">
+            <Nav className="flex-column">
+              {menuItems.map((item) => (
+                <div key={item.id} className="menu-wrapper">
+                  <div className="menu-item" onClick={() => toggleMenu(item.id)}>
+                    <span className="menu-icon">{item.icon}</span>
+                    <span className="menu-label">{item.label}</span>
+                    <span className="menu-arrow">{openMenu === item.id ? "▲" : "▶"}</span>
+                  </div>
+                  <div className={`submenu ${openMenu === item.id ? "show" : ""}`}>
+                    {item.subcategories.map((sub, index) => (
+                      <Link key={index} to={`/category/${item.id}/${sub.toLowerCase().replace(/\s+/g, '-')}`} className="submenu-item">
+                        {sub}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </Nav>
+          </Col>
+        </Row>
+      )}
+
+      {categoryId && subcategories.length > 0 && (
+        <Row className="subcategory-row">
+          <Col>
+            <div className="subcategory-list">
+              {subcategories.map((sub, index) => (
+                <Link key={index} to={`/category/${categoryId}/${sub.toLowerCase().replace(/\s+/g, '-')}`} className="subcategory-item">
+                  {sub}
+                </Link>
+              ))}
+            </div>
+          </Col>
+        </Row>
+      )}
+    </Container>
   );
 };

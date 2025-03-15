@@ -12,7 +12,8 @@ function App() {
           <SearchBar/>
           <Routes>
             <Route path="/" element={<Main/>}/>
-            <Route path="/category/:categoryId/:subcategory" element = {<Category/>}/>
+            <Route path="/category/:categoryId" element={<Category/>}/>
+            <Route path="/category/:categoryId/:subcategory" element={<Category/>}/>
           </Routes>
         </div>
     </BrowserRouter>
