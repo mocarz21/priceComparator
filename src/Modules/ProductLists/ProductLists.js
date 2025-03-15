@@ -1,7 +1,6 @@
 import './ProductLists.scss'
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-
+import { useParams, useNavigate } from "react-router-dom";
 
 const products = [
   {
@@ -38,18 +37,27 @@ const products = [
   },
 ];
 
-export const ProductLists = () =>{
-
+export const ProductLists = () => {
   const { categoryId, subcategory } = useParams();
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    // Przykład – jeśli kategoria i subkategoria to "smartfony",
+    // pokazujemy wszystkie "products"
     if (categoryId === "smartfony" && subcategory === "smartfony") {
       setFilteredProducts(products);
     } else {
       setFilteredProducts([]);
     }
   }, [categoryId, subcategory]);
+
+  const toProduct = (product) => {
+    // Nawigujemy z pełnym URL: /category/:categoryId/:subcategory/:productId
+    navigate(`/category/${categoryId}/${subcategory}/${product.id}`, {
+      state: { product },
+    });
+  };
 
   return (
     <div className="container product-list-module">
@@ -58,12 +66,21 @@ export const ProductLists = () =>{
           filteredProducts.map((product) => (
             <div key={product.id} className="row-md-4 mb-4 product-box">
               <div className="card">
-                <img className="card-img-top" src={`/images/${product.image}`} alt={product.name} />
+                <img
+                  className="card-img-top"
+                  src={`/images/${product.image}`}
+                  alt={product.name}
+                />
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text">Cena: {product.price}</p>
                   <p className="card-text">Ocena: {product.rating} ⭐</p>
-                  <button className="btn btn-primary">Sprawdź ofertę</button>
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => toProduct(product)}
+                  >
+                    Sprawdź ofertę
+                  </button>
                 </div>
               </div>
             </div>
